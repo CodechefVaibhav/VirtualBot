@@ -1,0 +1,29 @@
+<!-- 
+
+	:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	SFS2X Client Configuration file
+	(c) 2009 gotoAndPlay
+	:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+-->
+
+
+<SmartFoxConfig>
+	<!-- Mandatory Settings -->
+	<ip>localhost</ip>
+    <udpIp>localhost</udpIp>
+	<port>9933</port>
+    <udpPort>9933</udpPort>
+	<zone>PokerKing</zone>	 
+	<!-- End Mandatory Settings -->
+	
+	<debug>true</debug>
+	
+	<!-- For generic http port communication -->
+	<httpPort>8080</httpPort>
+	
+	<!-- BlueBox settings -->
+	<useBlueBox>true</useBlueBox>
+	<blueBoxPollingRate>700</blueBoxPollingRate>
+	
+</SmartFoxConfig>
