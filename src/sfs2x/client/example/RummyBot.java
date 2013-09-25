@@ -1044,7 +1044,8 @@ protected void onExtension(SFSEvent evt)
 			roomLeft=true;
 			if(clientTimer!=null)
 			{
-				clientTimer.cancel();				
+				clientTimer.cancel();
+				clientTimer.purge();
 			}
 			if(clientKeepAlive!=null)
 			{
@@ -1201,7 +1202,7 @@ protected void onExtension(SFSEvent evt)
 		chipsCheck=true;
 		takenSeat=false;
 		SFSObject sfsob = new SFSObject();
-		//System.out.println("initiateTakeSeat");
+		System.out.println("initiateTakeSeat");
 		sendExtensionRequest("game.account",sfsob,null);
 	}
 	private boolean isNonTournamentGameType()

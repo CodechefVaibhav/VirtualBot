@@ -52,8 +52,9 @@ public class SFSEventHandler implements IEventListener {
 		else if(event.getType().equals(SFSEvent.CONNECTION_LOST))
 		{
 			hasDisconnected = true;
-			requestIniatiatorObj.startReconnectionTimer();
 			requestIniatiatorObj.clearGameRoomsOnDisconnection();
+			requestIniatiatorObj.startReconnectionTimer();
+			
 			
 //			if(command == JOptionPane.YES_OPTION || command == JOptionPane.OK_OPTION)
 //			{
@@ -97,6 +98,7 @@ public class SFSEventHandler implements IEventListener {
 			requestIniatiatorObj.setLoggedinSucessfully(false);
 			System.out.println("LOGIN_ERROR");
 			JOptionPane.showMessageDialog(null,"Incorrect Username or password");
+			System.exit(0);
 		}
 		else if (event.getType().equals(SFSEvent.ROOM_JOIN))
 		{

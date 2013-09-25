@@ -61,7 +61,7 @@ public class ChildRummyBot extends RummyBot {
 		this.roomToJoin = roomName;
 		this.botRank = botRank;
 		this.chipType = chipType;
-		RequestIniatiator.loggedInBotsList.add((new LoggedInBots(userName,password,roomName,botRank,chipType)));
+		RequestIniatiator.loggedInBotsList.add(new LoggedInBots(userName,password,roomName,botRank,chipType));
 	}
 	
 	@Override
@@ -472,9 +472,6 @@ public class ChildRummyBot extends RummyBot {
 					tempInternalFrame = (NewJInternalFrame)reqinit.botByFrameMap.get(new Integer(this.myPlayerId));
 				if(tempInternalFrame!=null)
 					tempInternalFrame.updateDealerChat(dataArray[1]);
-					
-				
-				//mObj.getInternalFrame().updateDealerChat(dataArray[1]);
 			}
 		}
 		else if(params.get("cmd").equals("game.rowclickdata"))
@@ -504,8 +501,11 @@ public class ChildRummyBot extends RummyBot {
 			    clientTimer.scheduleAtFixedRate(clientKeepAlive,1,KEEP_ALIVE_INTERVAL);
 			    
 			    if(roomToJoin !=null && !roomToJoin.isEmpty())
+			    {
 			    	reqinit.setRoomObj(sfs.getRoomByName(roomToJoin));
 			    	joinRoom(roomToJoin);
+			    }
+			    	
 			}
 			else if (event.getType().equals(SFSEvent.CONNECTION_LOST))
 			{
@@ -517,25 +517,15 @@ public class ChildRummyBot extends RummyBot {
 		        }
 		    	else
 		    	{
-		    		//clearGameRoomsOnDisconnection();
-		    		//closeClient();
+
 		    		clearAllMemory();
-		    		
-		    		//updateBotByFrameMap();
 		    		    		 
 		    	}	    	
 			}
 			else if (event.getType().equals(SFSEvent.LOGIN_ERROR))
-			{	     
-		    	System.out.println("Bot="+userName+" failed to do Login . Doing disconnection from SFS.");
-		    	
-		    	if(!test)
-		    	{
-		    		if(BotSpawner.botAccountMap.containsKey(userName))
-		    		{		    			
-		    			botLogOut();
-		    		}
-		    	}  			     
+			{
+				JOptionPane.showMessageDialog(null,"");
+		    	botLogOut();				    			     
 			}
 			else if (event.getType().equals(SFSEvent.ROOM_JOIN))
 		    {  	    	
@@ -545,8 +535,7 @@ public class ChildRummyBot extends RummyBot {
 		    	
 				if(roomLeft)
 				{
-					System.out.println("BOT="+userName+" has joined GAME LOBBY.");
-					//updateMsg(sfs.getMySelf().getName() + " joined room:" + room.getName());					
+					System.out.println("BOT="+userName+" has joined GAME LOBBY.");				
 					if(test)
 					{
 						gameRoom = null;
@@ -556,7 +545,8 @@ public class ChildRummyBot extends RummyBot {
 					{
 						//Bot has left the room , now coming to Lobby for logout.
 						if(isConnected())sfs.disconnect();
-						BotSpawner.botAccountMap.get(userName).setStatus(true); //this has to be checked , vdr Bot actually gets disconnected, other vise set this true on disconnection event.
+						
+						//BotSpawner.botAccountMap.get(userName).setStatus(true); //this has to be checked , vdr Bot actually gets disconnected, other vise set this true on disconnection event.
 						System.out.println("Bot :"+userName+" Logged out");
 						clearAllMemory();
 					}
@@ -573,17 +563,8 @@ public class ChildRummyBot extends RummyBot {
 			else if (event.getType().equals(SFSEvent.ROOM_JOIN_ERROR))
 			{
 		    	System.out.println("Bot was Unable to Join the Room.Error="+event.getArguments().get("errorMessage"));
-			 	if(test)
-				{
-					//still not joined in any room
-					//join lobby
-					joinRoom(LOBBY_ROOM_NAME);
-					//sfs.disconnect();
-				}
-				else
-				{
-					botLogOut();
-				}		
+		    	botLogOut();
+					
 			}
 			else if (event.getType().equals(SFSEvent.CONNECTION))
 			{
@@ -591,7 +572,8 @@ public class ChildRummyBot extends RummyBot {
 				System.out.println("#####################Password "+password);
 				System.out.println("CONNECTION*********************CHILD");
 				System.out.println("Bot="+userName+" connected successfully. Now doing Login.");
-		    	// Login in current zone
+		    	
+				// Login in current zone
 				String zone = sfs.getCurrentZone();
 				sfs.send(new LoginRequest(userName, password, sfs.getCurrentZone()));	
 			}
@@ -607,23 +589,15 @@ public class ChildRummyBot extends RummyBot {
 		    else if (event.getType().equals(SFSEvent.LOGIN))
 		    {	
 		    	System.out.println("Bot="+userName + " Logged in successfully.");
+		    	
 		    	//start keep alive timer
 		    	clientTimer= new Timer();
 		    	clientKeepAlive=new ChildClientKeepAlive();
 			    clientTimer.scheduleAtFixedRate(clientKeepAlive,1,KEEP_ALIVE_INTERVAL);
 			  
-				//realChips = sfso.getInt("realChips");
-				if(test)
-				{
-					System.out.println("Bot="+userName+" Joining Game Lobby.");						 
-					joinRoom(LOBBY_ROOM_NAME);
-				}
-				else
-				{
-					if(roomToJoin !=null && !roomToJoin.isEmpty())
+			    if(roomToJoin !=null && !roomToJoin.isEmpty())
 				    	joinRoom(roomToJoin);						
-				}
-				     	 		
+					     	 		
 		   }
 		   else if (event.getType().equals(SFSEvent.EXTENSION_RESPONSE))
 		   {	

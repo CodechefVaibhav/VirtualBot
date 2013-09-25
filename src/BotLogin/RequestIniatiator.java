@@ -13,11 +13,15 @@ import java.util.Arrays;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JOptionPane;
@@ -106,7 +110,8 @@ public class RequestIniatiator {
 
 	public ConcurrentHashMap<Integer, NewJInternalFrame> botByFrameMap = new ConcurrentHashMap<Integer, NewJInternalFrame>();
 	public ConcurrentHashMap<Integer, RummyBot> botByRummyBot = new ConcurrentHashMap<Integer, RummyBot>();
-	public static volatile ArrayList<LoggedInBots> loggedInBotsList = new ArrayList<LoggedInBots>();
+	public static Queue<LoggedInBots> loggedInBotsList = new LinkedList<LoggedInBots>();
+	public static Queue<LoggedInBots> loggedInBotsCopy = new LinkedList<LoggedInBots>();
 	private SeatInfo seatinfo;
 	
 	public RequestIniatiator()
@@ -834,14 +839,40 @@ public class RequestIniatiator {
 	 
 		public void joinRoomRequestAfterReconnection()
 		{
-			Iterator loggedInBotsItr = loggedInBotsList.iterator();
-			while(loggedInBotsItr.hasNext())
+			System.out.println("loggedInBotsCopy size : "+loggedInBotsCopy.size());
+			System.out.println("loggedInBotsList size : "+loggedInBotsList.size());
+			int size = loggedInBotsList.size();
+			for(int i=1; i<=size ; i++)
 			{
-				LoggedInBots botObj = (LoggedInBots)loggedInBotsItr.next();
-				new ChildRummyBot(botObj.getUserName(), botObj.getPassword(), botObj.getRoomName(), botObj.getBotRank(), botObj.getChipType(),this);
+				loggedInBotsCopy.add(loggedInBotsList.poll());
 			}
 			
-			loggedInBotsList.clear();
+			System.out.println("loggedInBotsCopy size : "+loggedInBotsCopy.size());
+			System.out.println("loggedInBotsList size : "+loggedInBotsList.size());
+			
+			if(loggedInBotsCopy!=null)
+			{
+				for(int i=0; i<size; i++)
+				{
+					LoggedInBots botObj = loggedInBotsCopy.poll();
+					new ChildRummyBot(botObj.getUserName(), botObj.getPassword(), botObj.getRoomName(), botObj.getBotRank(), botObj.getChipType(),this);
+					try{
+					Thread.sleep(5000);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+//			Iterator loggedInBotsItr = loggedInBotsList.iterator();
+//			while(loggedInBotsItr.hasNext())
+//			{
+//				LoggedInBots botObj = (LoggedInBots)loggedInBotsItr.next();
+//				new ChildRummyBot(botObj.getUserName(), botObj.getPassword(), botObj.getRoomName(), botObj.getBotRank(), botObj.getChipType(),this);
+//			}
+			
+			//loggedInBotsList.clear();
 		}
 
 	
