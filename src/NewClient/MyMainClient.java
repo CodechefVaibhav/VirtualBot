@@ -86,10 +86,10 @@ public class MyMainClient extends javax.swing.JFrame {
     	this.add(getInternalFrame());
     	return getInternalFrame();
     }
-    public NewJInternalFrame createInternalFrame(String roomName, String botName, int botId, Room roomObj, ChildRummyBot childRummyGlobalObj)
+    public NewJInternalFrame createInternalFrame(String roomName, String botName, int botId, Room roomObj, ChildRummyBot childRummyGlobalObj, String multiplier)
     {
     	
-    	setInternalFrame(roomName, botName, botId, roomObj, childRummyGlobalObj);
+    	setInternalFrame(roomName, botName, botId, roomObj, childRummyGlobalObj, multiplier);
     	this.add(getInternalFrame());
     	internalFramesArrayList.add(getInternalFrame());
     	//desktopPane.add(getInternalFrame());
@@ -186,13 +186,14 @@ public class MyMainClient extends javax.swing.JFrame {
     	intnlClient.setRoomObject(roomObj);
     	intnlClient.setReqinitGlobalObj(reqinitGlobalObj);
     } 
-    public void setInternalFrame(String roomName, String botName, int botId, Room roomObj, ChildRummyBot childRummyGlobalObj)
+    public void setInternalFrame(String roomName, String botName, int botId, Room roomObj, ChildRummyBot childRummyGlobalObj, String multiplier)
     {
     	intnlClient = new NewJInternalFrame();
     	intnlClient.setRoomName(roomName, botName);
     	intnlClient.setBotId(botId);
     	intnlClient.setRoomObject(roomObj);
     	intnlClient.setChildRummyGlobalObj(childRummyGlobalObj);
+    	intnlClient.setMultiplier(multiplier);
     } 
     public void updateString(String msg)
     {

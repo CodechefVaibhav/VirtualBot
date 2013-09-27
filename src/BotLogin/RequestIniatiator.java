@@ -822,6 +822,13 @@ public class RequestIniatiator {
 		 while(itr.hasNext())
 		 {
 			 NewJInternalFrame tempObj = (NewJInternalFrame)itr.next();
+			 if(tempObj.getTurnTimerObj()!=null)
+			 {
+				 tempObj.getTurnTimerObj().cancel();
+				 tempObj.getTurnTimerObj().purge();
+				 tempObj.setTurnTimerObj(null);
+			 }
+			 
 			 tempObj.dispose();
 		 }
 		 

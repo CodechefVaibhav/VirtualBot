@@ -18,6 +18,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -89,6 +92,9 @@ public class database {
                       "FROM cp_game_config where cp_game_config.chip_type = \"dummy\" ";
         ResultSet rs = st.executeQuery(qry);
         
+       
+//        Pattern pattern = Pattern.compile("21");
+        
         while(rs.next())
         {
             //Vector myVect = getMyVector();
@@ -98,16 +104,24 @@ public class database {
 //            myVect.addElement(new Integer(rs.getInt("buyin_low")));
 //            myVect.addElement(new Integer(rs.getInt("small_blind"))); 
 //            myVect.addElement(new Integer(rs.getInt("big_blind"))); 
-            if(rs.getString("remarks")!=null && rs.getInt("num_game_tables")>1)
-        	{
-            	myDataObj.setGameName(new String(rs.getString("remarks")));
-            	myDataObj.setBuyin_high(new Integer(rs.getInt("buyin_high")));
-            	myDataObj.setBuyin_low(new Integer(rs.getInt("buyin_low")));
-            	myDataObj.setSmall_blind(new Integer(rs.getInt("small_blind"))); 
-            	myDataObj.setBig_blind(new Integer(rs.getInt("big_blind"))); 
-            	myDataObj.setConfigId(new Integer(rs.getInt("id")));
-            	parentVector.add(myDataObj);
-        	}
+
+//            String remarksString = rs.getString("remarks");
+//            Matcher matcher = pattern.matcher(remarksString);
+//            if (matcher.find()) {
+//                System.out.println("21 card game found"); //prints /{item}/
+//            } 
+//            else { 
+	            if(rs.getString("remarks")!=null && rs.getInt("num_game_tables")>1)
+	        	{
+	            	myDataObj.setGameName(new String(rs.getString("remarks")));
+	            	myDataObj.setBuyin_high(new Integer(rs.getInt("buyin_high")));
+	            	myDataObj.setBuyin_low(new Integer(rs.getInt("buyin_low")));
+	            	myDataObj.setSmall_blind(new Integer(rs.getInt("small_blind"))); 
+	            	myDataObj.setBig_blind(new Integer(rs.getInt("big_blind"))); 
+	            	myDataObj.setConfigId(new Integer(rs.getInt("id")));
+	            	parentVector.add(myDataObj);
+	        	}
+//            }
 //            System.out.println(gameName);
 //            String gameName = rs.getString("remarks");
 //            int buyin_high = rs.getInt("buyin_high");

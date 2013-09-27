@@ -28,6 +28,7 @@ import db.dao.CpUserDAO;
 
 import rummy.Points;
 import rummy.PointsInfo;
+import rummy.Seat;
 import rummy.WinnerInfo;
 import sfs2x.client.SmartFox;
 import sfs2x.client.core.BaseEvent;
@@ -45,7 +46,7 @@ public class ChildRummyBot extends RummyBot {
 	ChildEventHandler iEventListenerObj = null;
 	RequestIniatiator reqinit = null;
 	Timer clientTimer = null;
-	
+
 	//String userName = null;
 	//String password = null;
 	//String roomName = null;
@@ -103,6 +104,8 @@ public class ChildRummyBot extends RummyBot {
 		}
 		if (params.get("cmd").equals("game.seatinfo"))
 		{
+			List<String> playerNamesList = new ArrayList<String>();
+			
 			if(data==null)
 			{
 				System.out.println("SFSObject was found Null on SEATINFO response. Bot="+userName+" doing LOGOUT.");
@@ -117,6 +120,28 @@ public class ChildRummyBot extends RummyBot {
 				System.out.println("************Exception in seatinfo");
 			}
 			
+			List<Seat> tempSeatList = seatinfo.getSeats();
+			for(int k=0; k<tempSeatList.size() ; k++)
+			{
+				Seat seatObj = tempSeatList.get(k);
+				if(seatObj!=null)
+				{
+					if(seatObj.occupied)
+					{
+						playerNamesList.add(seatObj.getPlayerName());
+						System.out.println("SEATED PLAYER : "+(String)seatObj.getPlayerName());
+					}
+				}
+			}
+			
+			if(!playerNamesList.isEmpty())
+			{
+				NewJInternalFrame tempInternalFrame = null;
+				if(!reqinit.botByFrameMap.isEmpty())
+					tempInternalFrame = (NewJInternalFrame)reqinit.botByFrameMap.get(new Integer(this.myPlayerId));
+				if(tempInternalFrame!=null)
+					tempInternalFrame.updatePlayerNamesList(playerNamesList);
+			}
 			//System.out.println("SeatInfo recieved");
 			if(requestedSeat)
 			{ 
@@ -166,7 +191,7 @@ public class ChildRummyBot extends RummyBot {
 				CpUser cpUserObj = new CpUserDAO().findById(myPlayerId);
 				String botName = cpUserObj.getUserName();
 				mObj = MyMainClient.getInstance();
-				NewJInternalFrame internalTempObj  = mObj.createInternalFrame(this.gameRoom.getName(),botName, myPlayerId, roomObj, this);
+				NewJInternalFrame internalTempObj  = mObj.createInternalFrame(this.gameRoom.getName(),botName, myPlayerId, roomObj, this, Float.toString(pointMultiplier));
 				reqinit.botByFrameMap.put(new Integer(this.myPlayerId), internalTempObj);
 			}
 			
@@ -218,7 +243,7 @@ public class ChildRummyBot extends RummyBot {
 			else
 			{
 				gameEnded=true;
-				sendBotLogOutRequest();  // bot should do Logout on game end.
+				//sendBotLogOutRequest();  // bot should do Logout on game end.
 			}		
 		}
 		else if (params.get("cmd").equals("game.handcard")) // not needed really
@@ -281,6 +306,15 @@ public class ChildRummyBot extends RummyBot {
 			int playerid = data.getInt("playerId");	
 			int timer  =  data.getInt("turntime");
 			
+			CpUser cpUserObj = new CpUserDAO().findById(playerid);
+			NewJInternalFrame tempInternalFrame = null;
+			if(!reqinit.botByFrameMap.isEmpty())
+				tempInternalFrame = (NewJInternalFrame)reqinit.botByFrameMap.get(new Integer(this.myPlayerId));
+			if(tempInternalFrame!=null)
+			{
+				tempInternalFrame.startTurnTimer(timer,cpUserObj.getUserName());
+			}
+			
 			//Noow i  wil pick a card
 			if(playerid ==myPlayerId)
 			{	
@@ -335,6 +369,15 @@ public class ChildRummyBot extends RummyBot {
 		else if (params.get("cmd").equals("game.points")) // not needed really
 		{	
 			
+			NewJInternalFrame tempInternalFrame = null;
+			if(!reqinit.botByFrameMap.isEmpty())
+				tempInternalFrame = (NewJInternalFrame)reqinit.botByFrameMap.get(new Integer(this.myPlayerId));
+			if(tempInternalFrame!=null)
+			{
+				tempInternalFrame.stopTurnTimer();
+			}
+			
+			
 			PointsInfo pointInfo=null;
 			try
 			{
@@ -349,6 +392,9 @@ public class ChildRummyBot extends RummyBot {
 				System.out.println("BOT="+userName+" didnt receive PointsInfo, ISSUE!!!!!!!!!!!!");		
 				return;
 			}
+			
+			//CpUser cpUserObj = new CpUserDAO().findById(playerid);
+			
 			int myPoints=0;
 			for(int i=0;i<pointInfo.pointsList.size();i++)
 			{
@@ -381,7 +427,7 @@ public class ChildRummyBot extends RummyBot {
 			}
 			catch (Exception e) {
 				System.out.println("************Exception in winnerInfo");
-			}		
+			}
 			
 			if(winnerInfo==null)
 			{
@@ -524,7 +570,7 @@ public class ChildRummyBot extends RummyBot {
 			}
 			else if (event.getType().equals(SFSEvent.LOGIN_ERROR))
 			{
-				JOptionPane.showMessageDialog(null,"");
+				JOptionPane.showMessageDialog(null,"Incorrect Username Or Password");
 		    	botLogOut();				    			     
 			}
 			else if (event.getType().equals(SFSEvent.ROOM_JOIN))
@@ -700,7 +746,6 @@ public class ChildRummyBot extends RummyBot {
 				{
 					e.printStackTrace();
 				}
-				//botLogOut();
 			}
 			
 		}
@@ -798,6 +843,4 @@ public class ChildRummyBot extends RummyBot {
 			}
 		}
 		
-	
-	
 }
