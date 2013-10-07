@@ -38,12 +38,12 @@ public class RummyBotLogic
 	private RummyBot bot;
 	private List<Card> jokerCards=new ArrayList<Card>();
 	private boolean groupOfFour=false;
-	private boolean isPickedFromDeck=false;
-	private boolean usePickedInGroup=false;
-	private boolean pureSequence=false;
-	private boolean iDeclared=false;
-	private boolean isValueGame=false;
-	private boolean isCutJokerPickable=false;
+	protected boolean isPickedFromDeck=false;
+	protected boolean usePickedInGroup=false;
+	protected boolean pureSequence=false;
+	protected boolean iDeclared=false;
+	protected boolean isValueGame=false;
+	protected boolean isCutJokerPickable=false;
 	public RummyBotLogic(RummyBot bot) {
 		this.bot=bot;
 		// TODO Auto-generated constructor stub

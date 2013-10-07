@@ -17,27 +17,44 @@ import common.Card;
 import common.Face;
 import common.Suit;
 
-public class RummyBotIntelligence {
+public class RummyBotIntelligence extends RummyBotLogic {
 
+	ChildRummyBot bot = null;
+	
 	private List<Card> cardlist = null;
 	private List<List<Card>> groupedCards=new ArrayList<List<Card>>();
 	private List<List<Card>> ungroupedCards=new ArrayList<List<Card>>();
 	private List<Card> jokerList = new ArrayList<Card>();
+	
 	private SuitListClass suitClassObj = null;
-	private SuitListClass[] suitTypeArray = null; 
+	private SuitListClass[] suitTypeArray = null;
+	private List<Chunk> chunkList = new ArrayList<Chunk>();
+	private List<Chunk> readyChunks = new ArrayList<Chunk>();
+	
 	private Card cutJoker = null;
 	private CardList cardListObj = null;
+	
+	private boolean isPickedMakesPure = false;
+	private boolean isPickedMakesSequence = false;
+	private boolean isPickedMakesSet = false;
+	int chunkincr = 0;
+	
+	Chunk chunkTemp = null;
+	
+	private int usedSuit = -1;
 	//private List
 	
-	public RummyBotIntelligence(RummyBot bot)
+	public RummyBotIntelligence(ChildRummyBot bot)
 	{
-		
+		super(bot);
+		this.bot = bot;
 	}
 	
 	public void onHandCards(List<Card> handCards)
 	{
 		cardlist = handCards;
-		instantiateSuiteClass();
+		//instantiateSuiteClass();
+		//instantiateChunk();
 		 /*List<Card>suitSortedCards =*/ sortBySuit(cardlist);
 		// List<Card>faceSortedCards = sortByFace(suitSortedCards);
 /*		 for(int i=0 ; i<suitSortedCards.size() ; i++)
@@ -57,6 +74,16 @@ public class RummyBotIntelligence {
 		}
 	}
 	
+//	public void instantiateChunk()
+//	{
+//		chunkList = new ArrayList<Chunk>();
+//		Chunk chunkObj = new Chunk();
+//		chunkObj.setChunkCards(cardlist);
+//		chunkObj.setId(0);
+//		chunkObj.setArranged(false);
+//		chunkList.add(chunkObj);
+//	}
+	
 	public SuitListClass getSuitListClassBySuitType(int type)
 	{
 		SuitListClass suitClassByType = null;
@@ -67,6 +94,87 @@ public class RummyBotIntelligence {
 		return suitClassByType;
 	}
 	
+	private List<List<Card>> groupByFace(List<Card> cards)
+	{
+		List<List<Card>> sortedCards = new ArrayList<List<Card>>();
+		
+		List<Card> two = new ArrayList<Card>();
+		List<Card> three = new ArrayList<Card>();
+		List<Card> four = new ArrayList<Card>();
+		List<Card> five = new ArrayList<Card>();
+		List<Card> six = new ArrayList<Card>();
+		List<Card> seven = new ArrayList<Card>();
+		List<Card> eight = new ArrayList<Card>();
+		List<Card> nine = new ArrayList<Card>();
+		List<Card> ten = new ArrayList<Card>();
+		List<Card> eleven = new ArrayList<Card>();
+		List<Card> twelve = new ArrayList<Card>();
+		List<Card> thirteen = new ArrayList<Card>();
+		List<Card> fourteen = new ArrayList<Card>();
+		
+		for(Card c : cards)
+		{
+			switch(c.face.value)
+			{
+				case 2:
+					two.add(c);
+					break;
+				case 3:
+					three.add(c);
+					break;
+				case 4:
+					four.add(c);
+					break;
+				case 5:
+					five.add(c);
+					break;
+				case 6:
+					six.add(c);
+					break;
+				case 7:
+					seven.add(c);
+					break;
+				case 8:
+					eight.add(c);
+					break;
+				case 9:
+					nine.add(c);
+					break;
+				case 10:
+					ten.add(c);
+					break;
+				case 11:
+					eleven.add(c);
+					break;
+				case 12:
+					twelve.add(c);
+					break;
+				case 13:
+					thirteen.add(c);
+					break;
+				case 14:
+					fourteen.add(c);
+					break;
+					
+			}
+		}
+		
+		sortedCards.add(two);
+		sortedCards.add(three);
+		sortedCards.add(four);
+		sortedCards.add(five);
+		sortedCards.add(six);
+		sortedCards.add(seven);
+		sortedCards.add(eight);
+		sortedCards.add(nine);
+		sortedCards.add(ten);
+		sortedCards.add(eleven);
+		sortedCards.add(twelve);
+		sortedCards.add(thirteen);
+		sortedCards.add(fourteen);
+		
+		return sortedCards;
+	}
 	private List<Card> sortBySuit(List<Card> cards)
 	{
 		//Sorts them by suit.
@@ -96,17 +204,123 @@ public class RummyBotIntelligence {
 			}
 		}
 		//List<Card> type0FaceSorted = sortBySuit(type0);
-		distributeCardsInVariousLists(getSuitListClassBySuitType(0),sortByFace(type0));
+		/*distributeCardsInVariousLists(getSuitListClassBySuitType(0),*/sortByFace(type0)/*)*/;
 		//sortedCards.addAll(sortedCards.size(),sortByFace(type0));
 		//sortedCards.addAll(sortedCards.size(),sortByFace(type1));
-		distributeCardsInVariousLists(getSuitListClassBySuitType(1),sortByFace(type1));
+		/*distributeCardsInVariousLists(getSuitListClassBySuitType(1),*/sortByFace(type1)/*)*/;
 		//sortedCards.addAll(sortedCards.size(),sortByFace(type2));
-		distributeCardsInVariousLists(getSuitListClassBySuitType(2),sortByFace(type2));
+		/*distributeCardsInVariousLists(getSuitListClassBySuitType(2),*/sortByFace(type2)/*)*/;
 		//sortedCards.addAll(sortedCards.size(),sortByFace(type3));
-		distributeCardsInVariousLists(getSuitListClassBySuitType(3),sortByFace(type3));
+		/*distributeCardsInVariousLists(getSuitListClassBySuitType(3),*/sortByFace(type3)/*)*/;
 		
 		//returns card sorted by suit
 		return sortedCards;
+	}
+	
+	private void prepareRawChunk(List<Card> typeNFaceSorted)
+	{
+		if(typeNFaceSorted.size()>0)
+		{	
+			Card temp = null;
+			boolean firstFace = true;
+			Chunk chunkObj = getNewChunkObject();
+			for(int i=0 ; i<typeNFaceSorted.size(); i++)
+			{
+				if(firstFace)
+				{
+					Card c1 = typeNFaceSorted.get(i);
+					chunkObj.getChunkCards().add(c1);
+					chunkObj.setSuiteTpe(c1.suit.value);
+					Card c2 = typeNFaceSorted.get(++i);
+					temp = c2;
+					int diff = c2.face.value - c1.face.value;
+					if(diff==0)
+					{
+						chunkObj = getNewChunkObject();
+						chunkObj.getChunkCards().add(c2);
+						chunkObj.setSuiteTpe(c2.suit.value);
+					}
+					else if(diff<=2)
+					{
+						chunkObj.getChunkCards().add(c2);
+						chunkObj.setSuiteTpe(c2.suit.value);
+					}
+					else
+					{
+						chunkObj = getNewChunkObject();
+						chunkObj.getChunkCards().add(c2);
+						chunkObj.setSuiteTpe(c2.suit.value);
+					}
+					firstFace = false;
+				}
+				else
+				{
+					Card c = typeNFaceSorted.get(i);
+					int diff = c.face.value - temp.face.value;
+					temp = c;
+					if(diff<=2)
+					{
+						chunkObj.getChunkCards().add(c);
+						chunkObj.setSuiteTpe(c.suit.value);
+					}
+					else if(diff==0)
+					{
+						chunkObj = getNewChunkObject();
+						chunkObj.getChunkCards().add(c);
+						chunkObj.setSuiteTpe(c.suit.value);
+					}
+					else
+					{
+						chunkObj = getNewChunkObject();
+						chunkObj.getChunkCards().add(c);
+						chunkObj.setSuiteTpe(c.suit.value);
+					}
+				}
+			}
+		}
+	}
+	private Chunk getNewChunkObject()
+	{
+		System.out.println("MAKING NEW CHUNK");
+		chunkTemp = new Chunk(++chunkincr);
+		chunkList.add(chunkTemp); 
+		return chunkTemp;		
+	}
+	
+	private void displayChunks()
+	{
+		for(int i=0; i<chunkList.size(); i++)
+		{
+			Chunk chunky = chunkList.get(i);
+			System.out.println("CHUNK : "+"SUIT : "+chunky.getSuiteTpe()+ "   CHUNKID : "+chunky.getId());
+			List<Card> c = chunky.getChunkCards();
+			for(int j=0; j<c.size() ; j++)
+			{
+				System.out.println("CHUNK : "+c.get(j).face.value+ " # "+ c.get(j).suit.value);
+			}
+			if(chechForPure(c))
+			{
+				readyChunks.add(chunky);
+				chunkList.remove(chunky);
+			}
+			
+		}
+		System.out.println("//////////////////////////////////////");
+		displayReadyCards();
+	}
+	
+	private void displayReadyCards()
+	{
+		for(int i=0; i<readyChunks.size(); i++)
+		{
+			Chunk chunky = readyChunks.get(i);
+			System.out.println("CHUNK : "+"SUIT : "+chunky.getSuiteTpe()+ "   CHUNKID : "+chunky.getId());
+			List<Card> c = chunky.getChunkCards();
+			for(int j=0; j<c.size() ; j++)
+			{
+				System.out.println("CHUNK : "+c.get(j).face.value+ " # "+ c.get(j).suit.value);
+			}
+		}
 	}
 	
 	
@@ -361,7 +575,85 @@ public class RummyBotIntelligence {
 	}
 			
 			
+	private boolean checkDiscardedCardIfUseful(Card card)
+	{
 		
+		boolean flag = false;
+		if(isJoker(card) && !isCutJokerPickable)
+		{
+			//cutjoker can only be picked from discarded pile if its very first userturn.
+			return flag;
+		}
+		int discardedCardSuit = card.suit.value;
+		SuitListClass suitClassTempObj = suitTypeArray[discardedCardSuit];
+		
+		List<List<Card>> openEndedTemp = suitClassTempObj.getOpenEnded();
+		open: for(int i=0; i<openEndedTemp.size() ;i++)
+		{
+			    List<Card> open = openEndedTemp.get(i);
+				open.add(card);
+				open = sortByFace(open);
+				if(chechForPure(open))
+				{
+					usedSuit = card.suit.value;
+					isPickedFromDeck = true;
+					flag = true;
+					open.remove(card);
+					open = sortByFace(open);
+					break open;
+				}
+				else if(checkForSequence(open))
+				{
+					usedSuit = card.suit.value;
+					isPickedFromDeck = true;
+					flag = true;
+					open.remove(card);
+					open = sortByFace(open);
+					break open;
+				}
+		}
+		
+		if(flag)return flag;
+		
+		List<List<Card>> middleEndedTemp = suitClassTempObj.getMiddleOpen();
+		middle: for(int j=0; j<middleEndedTemp.size() ;j++)
+		{
+			List<Card> middle = middleEndedTemp.get(j);
+			middle.add(card);
+			middle = sortByFace(middle);
+			if(chechForPure(middle))
+			{
+				usedSuit = card.suit.value;
+				isPickedFromDeck = true;
+				flag = true;
+				middle.remove(card);
+				middle = sortByFace(middle);
+				break middle;
+			}
+			else if(checkForSequence(middle))
+			{
+				usedSuit = card.suit.value;
+				isPickedFromDeck = true;
+				flag = true;
+				middle.remove(card);
+				middle = sortByFace(middle);
+				break middle;
+			}
+		}
+		
+		if(flag)return flag;
+		
+		List<List<Card>> unGroupedSeqTemp = suitClassTempObj.getUngroupedSequesnces();
+		ungroup: for(int k=0 ; k<unGroupedSeqTemp.size(); k++)
+		{
+			List<Card> ungrouped = unGroupedSeqTemp.get(k);
+			ungrouped.add(card);
+			ungrouped = sortByFace(ungrouped);
+			//
+		}
+		
+		return flag;
+	}
 		
 		
 //		boolean first = true;
@@ -471,6 +763,7 @@ public class RummyBotIntelligence {
 		//returns card sorted by face value and grouped by suit.
 		cards.clear();
 		cards.addAll(sortedCards);
+		prepareRawChunk(cards);
 		return cards;
 	}
 	
@@ -931,36 +1224,57 @@ public class RummyBotIntelligence {
 		list.add(c8);
 		
 		
-//		Face f9=new Face();
-//		Suit s9=new Suit();
-//		f9.setValue(5);
-//		s9.setValue(0);
-//		
-//		Card c9=new Card();
-//		c9.setFace(f9);
-//		c9.setSuit(s9);
-//		list.add(c9);
+		Face f9=new Face();
+		Suit s9=new Suit();
+		f9.setValue(5);
+		s9.setValue(0);
 		
+		Card c9=new Card();
+		c9.setFace(f9);
+		c9.setSuit(s9);
+		list.add(c9);
+		
+		
+		Face f10=new Face();
+		Suit s10=new Suit();
+		f10.setValue(2);
+		s10.setValue(1);
+		
+		Card c10=new Card();
+		c10.setFace(f10);
+		c10.setSuit(s10);
+		list.add(c10);
+		
+		List<List<Card>> sortedByFace = rc.groupByFace(list);
+		for(int i=0 ; i<sortedByFace.size(); i++)
+		{
+			List<Card> faceList = sortedByFace.get(i);
+			for(int j=0 ; j<faceList.size(); j++)
+			{
+				System.out.println(faceList.get(j).face.value +" ## "+faceList.get(j).suit.value);
+			}
+		}
 		rc.onHandCards(list);
-		rc.display();
-		list=rc.sortByFace(list);
-		if(rc.isPureSequesnce(list))
-		{
-			System.out.println("PURE SEQUENCE");
-		}
-		else
-		{
-			System.out.println("IMPURE SEQUENCE");
-		}
-		
-		if(rc.isValidSet(list))
-		{
-			System.out.println("Valid ");
-		}
-		else
-		{
-			System.out.println("Invalid ");
-		}
+		rc.displayChunks();
+//		//rc.display();
+//		list=rc.sortByFace(list);
+//		if(rc.isPureSequesnce(list))
+//		{
+//			System.out.println("PURE SEQUENCE");
+//		}
+//		else
+//		{
+//			System.out.println("IMPURE SEQUENCE");
+//		}
+//		
+//		if(rc.isValidSet(list))
+//		{
+//			System.out.println("Valid ");
+//		}
+//		else
+//		{
+//			System.out.println("Invalid ");
+//		}
 	}
 	
 	class CardList {
