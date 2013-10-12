@@ -3,47 +3,47 @@ package sfs2x.client.example;
 import java.util.ArrayList;
 import java.util.List;
 
-import common.Card;
+import sfs2x.client.example.BotCard;
 
 public class SuitListClass {
 
-	public List<List<Card>> openEnded = null;
-	public List<List<Card>> groupedSequences = null;
-	public List<List<Card>> ungroupedSequesnces = null;
-	public List<List<Card>> middleOpen = null;
+	public List<List<BotCard>> openEnded = null;
+	public List<List<BotCard>> groupedSequences = null;
+	public List<List<BotCard>> ungroupedSequesnces = null;
+	public List<List<BotCard>> middleOpen = null;
 	int type = -1;
 
 	public SuitListClass(int type)
 	{
 		this.type = type;
-		openEnded = new ArrayList<List<Card>>();
-		groupedSequences = new ArrayList<List<Card>>();
-		ungroupedSequesnces = new ArrayList<List<Card>>();
-		middleOpen = new ArrayList<List<Card>>();
+		openEnded = new ArrayList<List<BotCard>>();
+		groupedSequences = new ArrayList<List<BotCard>>();
+		ungroupedSequesnces = new ArrayList<List<BotCard>>();
+		middleOpen = new ArrayList<List<BotCard>>();
 	}
 	
-	public List<List<Card>> getOpenEnded() {
+	public List<List<BotCard>> getOpenEnded() {
 		return openEnded;
 	}
-	public void setOpenEnded(List<List<Card>> openEnded) {
+	public void setOpenEnded(List<List<BotCard>> openEnded) {
 		this.openEnded = openEnded;
 	}
-	public List<List<Card>> getGroupedSequences() {
+	public List<List<BotCard>> getGroupedSequences() {
 		return groupedSequences;
 	}
-	public void setGroupedSequences(List<List<Card>> groupedSequences) {
+	public void setGroupedSequences(List<List<BotCard>> groupedSequences) {
 		this.groupedSequences = groupedSequences;
 	}
-	public List<List<Card>> getUngroupedSequesnces() {
+	public List<List<BotCard>> getUngroupedSequesnces() {
 		return ungroupedSequesnces;
 	}
-	public void setUngroupedSequesnces(List<List<Card>> ungroupedSequesnces) {
+	public void setUngroupedSequesnces(List<List<BotCard>> ungroupedSequesnces) {
 		this.ungroupedSequesnces = ungroupedSequesnces;
 	}
-	public List<List<Card>> getMiddleOpen() {
+	public List<List<BotCard>> getMiddleOpen() {
 		return middleOpen;
 	}
-	public void setMiddleOpen(List<List<Card>> middleOpen) {
+	public void setMiddleOpen(List<List<BotCard>> middleOpen) {
 		this.middleOpen = middleOpen;
 	}
 

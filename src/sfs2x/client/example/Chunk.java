@@ -4,12 +4,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 
-import common.Card;
+import sfs2x.client.example.BotCard;
 
 
 public class Chunk implements Comparator<Chunk> {
 
-	private List<Card> chunkCards = new ArrayList<Card>();
+	private List<BotCard> chunkCards = new ArrayList<BotCard>();
 	private boolean isSet = false;
 	private boolean isPure = false;
 	private boolean isSequence = false;
@@ -27,11 +27,11 @@ public class Chunk implements Comparator<Chunk> {
 		this.id = id;
 	}
 	
-	public List<Card> getChunkCards() {
+	public List<BotCard> getChunkCards() {
 		return chunkCards;
 	}
 	
-	public void setChunkCards(List<Card> chunkCards) {
+	public void setChunkCards(List<BotCard> chunkCards) {
 		this.chunkCards = chunkCards;
 	}
 	

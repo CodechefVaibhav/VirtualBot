@@ -47,6 +47,14 @@ public class BotCard extends Card {
 		return suit;
 	}
 
+	public Face getFace() {
+		return face;
+	}
+
+	public void setFace(Face face) {
+		this.face = face;
+	}
+
 	public void setSuit(Suit suit) {
 		this.suit = suit;
 	}
