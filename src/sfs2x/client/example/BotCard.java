@@ -1,26 +1,35 @@
 package sfs2x.client.example;
 
 import common.Card;
+import common.Face;
+import common.Suit;
+
 import java.util.List;
 import java.util.ArrayList;
 
-public class BotCard {
+public class BotCard extends Card {
 
-	private Card c = null;
+	public Face face;	
+	public Suit suit;
+	//private Card c = null;
 	private List<Integer> chunkIdList = new ArrayList<Integer>();
 	private float utilityValue;
 	
 	public BotCard()
-	{
-		
-	}
+	{}
 	
-	public Card getC() {
-		return c;
-	}
-	public void setC(Card c) {
-		this.c = c;
-	}
+	public BotCard(final Face face, final Suit suit) {
+		super(face,suit);
+		this.face = face;
+		this.suit = suit;
+	}	
+	
+//	public Card getC() {
+//		return c;
+//	}
+//	public void setC(Card c) {
+//		this.c = c;
+//	}
 	public List<Integer> getChunkIdList() {
 		return chunkIdList;
 	}
@@ -32,5 +41,18 @@ public class BotCard {
 	}
 	public void setUtilityValue(float utilityValue) {
 		this.utilityValue = utilityValue;
+	}
+	
+	public Suit getSuit() {
+		return suit;
+	}
+
+	public void setSuit(Suit suit) {
+		this.suit = suit;
+	}
+
+	public String toString()
+	{
+		return suit.toString()+face.toString();
 	}
 }

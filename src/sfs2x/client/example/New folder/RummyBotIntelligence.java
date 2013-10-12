@@ -17,7 +17,7 @@ import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 //import rummy.CardList;
 
-import common.Card;
+import sfs2x.client.example.BotCard;
 import common.Face;
 import common.Suit;
 
@@ -25,10 +25,10 @@ public class RummyBotIntelligence extends RummyBotLogic {
 
 	ChildRummyBot bot = null;
 	
-	private List<Card> cardlist = null;
-	private List<List<Card>> groupedCards=new ArrayList<List<Card>>();
-	private List<List<Card>> ungroupedCards=new ArrayList<List<Card>>();
-	private List<Card> jokerList = new ArrayList<Card>();
+	private List<BotCard> cardlist = null;
+	private List<List<BotCard>> groupedCards=new ArrayList<List<BotCard>>();
+	private List<List<BotCard>> ungroupedCards=new ArrayList<List<BotCard>>();
+	private List<BotCard> jokerList = new ArrayList<BotCard>();
 	
 	private SuitListClass suitClassObj = null;
 	private SuitListClass[] suitTypeArray = null;
@@ -36,7 +36,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	private List<Chunk> readyChunks = new ArrayList<Chunk>();
 	private HashMap<Integer,Opponent> pickedCardByNextPlayerMap = new HashMap<Integer,Opponent>();
 	
-	private Card cutJoker = null;
+	private BotCard cutJoker = null;
 	private CardList cardListObj = null;
 	
 	private boolean isPickedMakesPure = false;
@@ -72,13 +72,13 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		this.bot = bot;
 	}
 	
-	public void onHandCards(List<Card> handCards)
+	public void onnHandCards(List<BotCard> handCards)
 	{
 		cardlist = handCards;
-		List<List<Card>> suitSortedLists = sortBySuit(cardlist);
+		List<List<BotCard>> suitSortedLists = sortBySuit(cardlist);
 		for(int i=0 ; i<suitSortedLists.size();i++)
 		{
-			List<Card> typeN = suitSortedLists.get(i);
+			List<BotCard> typeN = suitSortedLists.get(i);
 			if(!typeN.isEmpty())
 			{
 				startChunkPrepration(typeN);
@@ -96,7 +96,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		}
 	}
 	
-	public void saveOpponentPlayersPickedCards(int playerId, Card c, boolean clear)
+	public void saveOpponentPlayersPickedCards(int playerId, BotCard c, boolean clear)
 	{
 		if(!clear)
 		{
@@ -133,26 +133,26 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return suitClassByType;
 	}
 	
-	private List<List<Card>> groupByFace(List<Card> cards)
+	private List<List<BotCard>> groupByFace(List<BotCard> cards)
 	{
 		System.out.println("?????????????????????????????????????");
-		List<List<Card>> sortedCards = new ArrayList<List<Card>>();
+		List<List<BotCard>> sortedCards = new ArrayList<List<BotCard>>();
 		
-		List<Card> two = new ArrayList<Card>();
-		List<Card> three = new ArrayList<Card>();
-		List<Card> four = new ArrayList<Card>();
-		List<Card> five = new ArrayList<Card>();
-		List<Card> six = new ArrayList<Card>();
-		List<Card> seven = new ArrayList<Card>();
-		List<Card> eight = new ArrayList<Card>();
-		List<Card> nine = new ArrayList<Card>();
-		List<Card> ten = new ArrayList<Card>();
-		List<Card> eleven = new ArrayList<Card>();
-		List<Card> twelve = new ArrayList<Card>();
-		List<Card> thirteen = new ArrayList<Card>();
-		List<Card> fourteen = new ArrayList<Card>();
+		List<BotCard> two = new ArrayList<BotCard>();
+		List<BotCard> three = new ArrayList<BotCard>();
+		List<BotCard> four = new ArrayList<BotCard>();
+		List<BotCard> five = new ArrayList<BotCard>();
+		List<BotCard> six = new ArrayList<BotCard>();
+		List<BotCard> seven = new ArrayList<BotCard>();
+		List<BotCard> eight = new ArrayList<BotCard>();
+		List<BotCard> nine = new ArrayList<BotCard>();
+		List<BotCard> ten = new ArrayList<BotCard>();
+		List<BotCard> eleven = new ArrayList<BotCard>();
+		List<BotCard> twelve = new ArrayList<BotCard>();
+		List<BotCard> thirteen = new ArrayList<BotCard>();
+		List<BotCard> fourteen = new ArrayList<BotCard>();
 		
-		for(Card c : cards)
+		for(BotCard c : cards)
 		{
 			switch(c.face.value)
 			{
@@ -230,14 +230,14 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return sortedCards;
 	}
 	
-	private void prepareChunksOfGroupByFace(List<Card> sortedCards)
+	private void prepareChunksOfGroupByFace(List<BotCard> sortedCards)
 	{
 		if(!sortedCards.isEmpty())
 		{
 			while(!sortedCards.isEmpty())
 			{
-				List<Card> myCards =  new ArrayList<Card>();
-				List<Card> temp = new ArrayList<Card>();
+				List<BotCard> myCards =  new ArrayList<BotCard>();
+				List<BotCard> temp = new ArrayList<BotCard>();
 				outter : for(int i=0 ; i<4 ; i++)
 				{
 					inner : for(int j=0 ; j<sortedCards.size() ; j++)
@@ -284,17 +284,17 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		}
 	}
 	
-	private List<List<Card>> sortBySuit(List<Card> cards)
+	private List<List<BotCard>> sortBySuit(List<BotCard> cards)
 	{
 		//Sorts them by suit.
-		List<List<Card>> sortedCards=new ArrayList<List<Card>>();
+		List<List<BotCard>> sortedCards=new ArrayList<List<BotCard>>();
 		
-		List<Card> type0=new ArrayList<Card>();
-		List<Card> type1=new ArrayList<Card>();
-		List<Card> type2=new ArrayList<Card>();
-		List<Card> type3=new ArrayList<Card>();
+		List<BotCard> type0=new ArrayList<BotCard>();
+		List<BotCard> type1=new ArrayList<BotCard>();
+		List<BotCard> type2=new ArrayList<BotCard>();
+		List<BotCard> type3=new ArrayList<BotCard>();
 		
-		for(Card c : cards)
+		for(BotCard c : cards)
 		{
 			switch(c.suit.value)
 			{
@@ -316,7 +316,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		sortedCards.add(type1);
 		sortedCards.add(type2);
 		sortedCards.add(type3);
-		//List<Card> type0FaceSorted = sortBySuit(type0);
+		//List<BotCard> type0FaceSorted = sortBySuit(type0);
 		/*distributeCardsInVariousLists(getSuitListClassBySuitType(0),*//*prepareRawChunk(sortByFace(type0))*//*)*/;
 		//sortedCards.addAll(sortedCards.size(),sortByFace(type0));
 		//sortedCards.addAll(sortedCards.size(),sortByFace(type1));
@@ -330,7 +330,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return sortedCards;
 	}
 	
-	private void startChunkPrepration(List<Card> typeN)
+	private void startChunkPrepration(List<BotCard> typeN)
 	{
 		prepareRawChunk(sortByFace(typeN));
 	}
@@ -422,12 +422,12 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		}
 	}
 	
-	private void isOpenEndedSequenceAndUpdateCount(List<Card> c)
+	private void isOpenEndedSequenceAndUpdateCount(List<BotCard> c)
 	{
 		if(c.size()==2)
 		{
-			Card c1 = c.get(0);
-			Card c2 = c.get(1);
+			BotCard c1 = c.get(0);
+			BotCard c2 = c.get(1);
 			int diff = c2.face.value - c1.face.value;
 			if(diff==1)
 			{
@@ -441,7 +441,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		
 	}
 	
-	private void onPickedCardRecievedFromServer(Card c)
+	private void onPickedCardRecievedFromServer(BotCard c)
 	{
 		for(int i=0 ; i<chunkList.size(); i++)
 		{
@@ -450,8 +450,8 @@ public class RummyBotIntelligence extends RummyBotLogic {
 			{
 				if(canReadyCardBeReplaced)
 				{
-					Card tempCard = null;
-					List<Card> myChunkCards = myChunkTemp.getChunkCards();
+					BotCard tempCard = null;
+					List<BotCard> myChunkCards = myChunkTemp.getChunkCards();
 					checkJoker : for(int j=0; j<myChunkCards.size(); j++)
 					{
 						if(isJoker(myChunkCards.get(j)))
@@ -488,7 +488,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 				}
 				else if(pickFromOpenDeck)
 				{
-					List<Card> myChunkCards = myChunkTemp.getChunkCards();
+					List<BotCard> myChunkCards = myChunkTemp.getChunkCards();
 					myChunkCards.add(c);
 					if(isPickedMakesPure)
 					{
@@ -532,11 +532,11 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		
 		readyLoop : for(int i=0; i<chunkList.size(); i++)
 		{
-			Card tempCard = null;
-			List<Card> cardsToCHeck = new ArrayList<Card>();
+			BotCard tempCard = null;
+			List<BotCard> cardsToCHeck = new ArrayList<BotCard>();
 			Chunk myReadyChunkTemp = chunkList.get(i);
 			boolean cardsHasJoker = false;
-			List<Card> myReadyChunkCards = myReadyChunkTemp.getChunkCards();
+			List<BotCard> myReadyChunkCards = myReadyChunkTemp.getChunkCards();
 			checkJoker : for(int j=0; j<myReadyChunkCards.size(); j++)
 			{
 				if(isJoker(myReadyChunkCards.get(j)))
@@ -551,7 +551,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 			{
 				myReadyChunkCards.remove(tempCard);
 				cardsToCHeck.addAll(myReadyChunkCards);
-				cardsToCHeck.add(getDiscardedCard());
+				cardsToCHeck.add((BotCard)getDiscardedCard());
 				cardsToCHeck = sortByFace(cardsToCHeck);
 				if(chechForPure(cardsToCHeck))
 				{
@@ -614,11 +614,11 @@ public class RummyBotIntelligence extends RummyBotLogic {
 			
 			if(chunkList.get(i).getChunkCards().size()>0)
 			{
-				List<Card> cardsToCHeck = new ArrayList<Card>();
+				List<BotCard> cardsToCHeck = new ArrayList<BotCard>();
 				Chunk chunkTEmp = chunkList.get(i);
-				List<Card> chunkCards = chunkTEmp.getChunkCards();
+				List<BotCard> chunkCards = chunkTEmp.getChunkCards();
 				cardsToCHeck.addAll(chunkCards);
-				cardsToCHeck.add(getDiscardedCard());
+				cardsToCHeck.add((BotCard)getDiscardedCard());
 				if(chechForPure(cardsToCHeck))
 				{
 					isPickedMakesPure = true;
@@ -669,21 +669,21 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		}
 	}
 	
-	private void prepareRawChunk(List<Card> typeNFaceSorted)
+	private void prepareRawChunk(List<BotCard> typeNFaceSorted)
 	{
 		if(typeNFaceSorted.size()>0)
 		{	
-			Card temp = null;
+			BotCard temp = null;
 			boolean firstFace = true;
 			Chunk chunkObj = getNewChunkObject();
 			for(int i=0 ; i<typeNFaceSorted.size(); i++)
 			{
 				if(firstFace)
 				{
-					Card c1 = typeNFaceSorted.get(i);
+					BotCard c1 = typeNFaceSorted.get(i);
 					chunkObj.getChunkCards().add(c1);
 					chunkObj.setSuiteTpe(c1.suit.value);
-					Card c2 = typeNFaceSorted.get(++i);
+					BotCard c2 = typeNFaceSorted.get(++i);
 					temp = c2;
 					int diff = c2.face.value - c1.face.value;
 					if(diff==0)
@@ -707,7 +707,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 				}
 				else
 				{
-					Card c = typeNFaceSorted.get(i);
+					BotCard c = typeNFaceSorted.get(i);
 					int diff = c.face.value - temp.face.value;
 					temp = c;
 					if(diff<=2)
@@ -750,12 +750,12 @@ public class RummyBotIntelligence extends RummyBotLogic {
 			Chunk myChunkTemp = chunkList.get(i);
 			if(myChunkTemp.getId()!=-1)
 			{
-				List<Card> tempCards = myChunkTemp.getChunkCards();
+				List<BotCard> tempCards = myChunkTemp.getChunkCards();
 				if(!tempCards.isEmpty() && (tempCards.size()<=2) && !myChunkTemp.isPure())
 				{
 					for(int j=0 ; j<tempCards.size() ;j++)
 					{
-						Card c = tempCards.get(j);
+						BotCard c = tempCards.get(j);
 						if(isJoker(c))
 						{
 							jokerList.add(c);
@@ -793,7 +793,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		{
 			int sum = 0;
 			Chunk myChunkTemp = chunkList.get(i);
-			List<Card> c = myChunkTemp.getChunkCards();
+			List<BotCard> c = myChunkTemp.getChunkCards();
 			for(int j=0; j<c.size(); j++)
 			{
 				sum = sum + c.get(j).face.value;
@@ -806,17 +806,17 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		Collections.sort(chunkList, new Chunk());
 		
 //		List<Chunk> chunkToRemove = new ArrayList<Chunk>();
-		List<Card> jokerToRemove = new ArrayList<Card>();
+		List<BotCard> jokerToRemove = new ArrayList<BotCard>();
 		for(int k=0; k<jokerList.size() ; k++)
 		{
 		    fillJoker : for(int i=0; i<chunkList.size() ; i++)
 			{
 				
-				List<Card> listToTest = new ArrayList<Card>();
+				List<BotCard> listToTest = new ArrayList<BotCard>();
 				Chunk myChunkTemp = chunkList.get(i);
 				if(!myChunkTemp.isPure() && !myChunkTemp.isSequence())
 				{
-					List<Card> c = myChunkTemp.getChunkCards();
+					List<BotCard> c = myChunkTemp.getChunkCards();
 					listToTest.addAll(c);
 					listToTest.add(jokerList.get(k));
 					if(checkForSequence(listToTest))
@@ -882,7 +882,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 			if(chunky.getId()!= -1)
 			{
 				System.out.println("CHUNK : "+"SUIT : "+chunky.getSuiteTpe()+ "   CHUNKID : "+chunky.getId());
-				List<Card> c = chunky.getChunkCards();
+				List<BotCard> c = chunky.getChunkCards();
 				for(int j=0; j<c.size() ; j++)
 				{
 					System.out.println("CHUNK : "+c.get(j).face.value+ " # "+ c.get(j).suit.value);
@@ -920,7 +920,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 					+" ispure: "+chunky.isPure()
 					+" isSet : "+chunky.isSet()
 					+" isSeq : "+chunky.isSequence());
-			List<Card> c = chunky.getChunkCards();
+			List<BotCard> c = chunky.getChunkCards();
 			for(int j=0; j<c.size() ; j++)
 			{
 				System.out.println("CHUNK : "+c.get(j).face.value+ " # "+ c.get(j).suit.value);
@@ -931,23 +931,23 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	}
 	
 	
-	private void distributeCardsInVariousLists( SuitListClass suitClassObj, List<Card> typeNFaceSorted)
+	private void distributeCardsInVariousLists( SuitListClass suitClassObj, List<BotCard> typeNFaceSorted)
 	{
 		
 		for(int i=0 ; i<typeNFaceSorted.size(); i++)
 		{
-			List<Card> cardTemp = new  ArrayList<Card>();
+			List<BotCard> cardTemp = new  ArrayList<BotCard>();
 			
 			if((typeNFaceSorted.size()-1)== i)
 			{
-				Card c1 = typeNFaceSorted.get(i);
+				BotCard c1 = typeNFaceSorted.get(i);
 				cardTemp.add(c1);
 				suitClassObj.ungroupedSequesnces.add(cardTemp);
 			}
 			else
 			{
-				Card c1 = typeNFaceSorted.get(i);
-				Card c2 = typeNFaceSorted.get(++i);
+				BotCard c1 = typeNFaceSorted.get(i);
+				BotCard c2 = typeNFaceSorted.get(++i);
 				int diff = c2.face.value - c1.face.value;
 				cardTemp.add(c1);
 				cardTemp.add(c2);
@@ -972,14 +972,14 @@ public class RummyBotIntelligence extends RummyBotLogic {
 			}
 		}
 		
-		List<List<Card>> openended = suitClassObj.getOpenEnded();
+		List<List<BotCard>> openended = suitClassObj.getOpenEnded();
 		for(int j=0; j<openended.size(); j++)
 		{   if(!(openended.size()-1 == j))
 			{
-				List<Card> one = openended.get(j);
-				List<Card> two = openended.get(++j);
-				Card c1 = one.get((one.size()-1));
-				Card c2 = two.get(0);
+				List<BotCard> one = openended.get(j);
+				List<BotCard> two = openended.get(++j);
+				BotCard c1 = one.get((one.size()-1));
+				BotCard c2 = two.get(0);
 				int temp = c1.face.value;
 				++temp;
 				if(temp==c2.face.value)
@@ -993,14 +993,14 @@ public class RummyBotIntelligence extends RummyBotLogic {
 
 		}
 		
-		List<List<Card>> unGroupedListTemp = suitClassObj.getUngroupedSequesnces();
+		List<List<BotCard>> unGroupedListTemp = suitClassObj.getUngroupedSequesnces();
 		for(int k=0; k<unGroupedListTemp.size(); k++)
 		{  
-			List<Card> jokerTempList = unGroupedListTemp.get(k);
+			List<BotCard> jokerTempList = unGroupedListTemp.get(k);
 			jokerloop : for(int y=0 ; jokerTempList.size()>0; )
 			{
 				System.out.println(y);
-				Card jokerCheckCard = jokerTempList.get(y);
+				BotCard jokerCheckCard = jokerTempList.get(y);
 				if(isJoker(jokerCheckCard))
 				{
 					jokerList.add(jokerCheckCard);
@@ -1009,13 +1009,13 @@ public class RummyBotIntelligence extends RummyBotLogic {
 				}
 				else
 				{
-					List<List<Card>> groupedSeqTemp = suitClassObj.getGroupedSequences();
+					List<List<BotCard>> groupedSeqTemp = suitClassObj.getGroupedSequences();
 					for(int i=0 ;i<groupedSeqTemp.size(); i++)
 					{
-						List<Card> c = groupedSeqTemp.get(i);
+						List<BotCard> c = groupedSeqTemp.get(i);
 						for(int j=0 ; j<c.size(); j++)
 						{
-							Card ctemp = c.get(j);
+							BotCard ctemp = c.get(j);
 							int temp = ctemp.face.value;
 							++temp;
 							if(temp==jokerCheckCard.face.value)
@@ -1030,13 +1030,13 @@ public class RummyBotIntelligence extends RummyBotLogic {
 						}
 					}
 					
-					List<List<Card>> openEndedTemp = suitClassObj.getOpenEnded();
+					List<List<BotCard>> openEndedTemp = suitClassObj.getOpenEnded();
 					for(int i=0; i<openEndedTemp.size() ;i++)
 					{
-						List<Card> c = openEndedTemp.get(i);
+						List<BotCard> c = openEndedTemp.get(i);
 						for(int j=0 ; j<c.size(); j++)
 						{
-							Card ctemp = c.get(j);
+							BotCard ctemp = c.get(j);
 							int temp = ctemp.face.value;
 							++temp;
 							if(temp==jokerCheckCard.face.value)
@@ -1055,13 +1055,13 @@ public class RummyBotIntelligence extends RummyBotLogic {
 						}
 					}
 					
-					List<List<Card>> middleOpenTemp = suitClassObj.getMiddleOpen();
+					List<List<BotCard>> middleOpenTemp = suitClassObj.getMiddleOpen();
 					for(int i=0; i<middleOpenTemp.size() ;i++)
 					{
-						List<Card> c = middleOpenTemp.get(i);
+						List<BotCard> c = middleOpenTemp.get(i);
 						for(int j=0; j<c.size(); j++)
 						{
-							Card ctemp = c.get(j);
+							BotCard ctemp = c.get(j);
 							int temp = ctemp.face.value;
 							++temp;
 							if(temp==jokerCheckCard.face.value)
@@ -1095,11 +1095,11 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		{
 			for(int y=0 ; y<jokerList.size() ; y++)
 			{
-				List<List<Card>> middleOpenToClubedWithJokers = suitClassObj.getMiddleOpen();
+				List<List<BotCard>> middleOpenToClubedWithJokers = suitClassObj.getMiddleOpen();
 				{
 					for(int j=0; j<middleOpenToClubedWithJokers.size(); j++)
 					{
-						List<Card> middleOpenToClub = middleOpenToClubedWithJokers.get(j);
+						List<BotCard> middleOpenToClub = middleOpenToClubedWithJokers.get(j);
 						middleOpenToClub.add(jokerList.get(y));
 						middleOpenToClub = sortByFace(middleOpenToClub);
 						if(checkForSequence(middleOpenToClub))
@@ -1127,53 +1127,53 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	{
 		for(int i=0; i<suitTypeArray.length ; i++)
 		{
-			List<List<Card>> open = suitTypeArray[i].getOpenEnded();
+			List<List<BotCard>> open = suitTypeArray[i].getOpenEnded();
 			for(int z=0 ;z<open.size(); z++)
 			{
-				List<Card> c = open.get(z);
+				List<BotCard> c = open.get(z);
 				for(int j=0 ; j<c.size(); j++)
 				{
-					Card ctemp = c.get(j);
+					BotCard ctemp = c.get(j);
 					System.out.println("open : "+ctemp.face.value +" # "+ctemp.suit.value);
 				}
 			}
 			
-			List<List<Card>> group = suitTypeArray[i].getGroupedSequences();
+			List<List<BotCard>> group = suitTypeArray[i].getGroupedSequences();
 			for(int x=0 ;x<group.size(); x++)
 			{
-				List<Card> c = group.get(x);
+				List<BotCard> c = group.get(x);
 				for(int j=0 ; j<c.size(); j++)
 				{
-					Card ctemp = c.get(j);
+					BotCard ctemp = c.get(j);
 					System.out.println("group : "+ctemp.face.value +" # "+ctemp.suit.value);
 				}
 			}
 			
-			List<List<Card>> middle = suitTypeArray[i].getMiddleOpen();
+			List<List<BotCard>> middle = suitTypeArray[i].getMiddleOpen();
 			for(int v=0 ;v<middle.size(); v++)
 			{
-				List<Card> c = middle.get(v);
+				List<BotCard> c = middle.get(v);
 				for(int j=0 ; j<c.size(); j++)
 				{
-					Card ctemp = c.get(j);
+					BotCard ctemp = c.get(j);
 					System.out.println("middle : "+ctemp.face.value +" # "+ctemp.suit.value);
 				}
 			}
 			
-			List<List<Card>> ungroup = suitTypeArray[i].getUngroupedSequesnces();
+			List<List<BotCard>> ungroup = suitTypeArray[i].getUngroupedSequesnces();
 			for(int b=0 ;b<ungroup.size(); b++)
 			{
-				List<Card> c = ungroup.get(b);
+				List<BotCard> c = ungroup.get(b);
 				for(int j=0 ; j<c.size(); j++)
 				{
-					Card ctemp = c.get(j);
+					BotCard ctemp = c.get(j);
 					System.out.println("ungroup : "+ctemp.face.value +" # "+ctemp.suit.value);
 				}
 			}
 			
 			for(int n=0; n<jokerList.size(); n++)
 			{
-				Card ctemp = jokerList.get(n);
+				BotCard ctemp = jokerList.get(n);
 				System.out.println("jokerLIst : "+ctemp.face.value +" # "+ctemp.suit.value);
 			}
 			
@@ -1182,7 +1182,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	}
 			
 			
-	private boolean checkDiscardedCardIfUseful(Card card)
+	private boolean checkDiscardedCardIfUseful(BotCard card)
 	{
 		
 		boolean flag = false;
@@ -1194,10 +1194,10 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		int discardedCardSuit = card.suit.value;
 		SuitListClass suitClassTempObj = suitTypeArray[discardedCardSuit];
 		
-		List<List<Card>> openEndedTemp = suitClassTempObj.getOpenEnded();
+		List<List<BotCard>> openEndedTemp = suitClassTempObj.getOpenEnded();
 		open: for(int i=0; i<openEndedTemp.size() ;i++)
 		{
-			    List<Card> open = openEndedTemp.get(i);
+			    List<BotCard> open = openEndedTemp.get(i);
 				open.add(card);
 				open = sortByFace(open);
 				if(chechForPure(open))
@@ -1222,10 +1222,10 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		
 		if(flag)return flag;
 		
-		List<List<Card>> middleEndedTemp = suitClassTempObj.getMiddleOpen();
+		List<List<BotCard>> middleEndedTemp = suitClassTempObj.getMiddleOpen();
 		middle: for(int j=0; j<middleEndedTemp.size() ;j++)
 		{
-			List<Card> middle = middleEndedTemp.get(j);
+			List<BotCard> middle = middleEndedTemp.get(j);
 			middle.add(card);
 			middle = sortByFace(middle);
 			if(chechForPure(middle))
@@ -1250,10 +1250,10 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		
 		if(flag)return flag;
 		
-		List<List<Card>> unGroupedSeqTemp = suitClassTempObj.getUngroupedSequesnces();
+		List<List<BotCard>> unGroupedSeqTemp = suitClassTempObj.getUngroupedSequesnces();
 		ungroup: for(int k=0 ; k<unGroupedSeqTemp.size(); k++)
 		{
-			List<Card> ungrouped = unGroupedSeqTemp.get(k);
+			List<BotCard> ungrouped = unGroupedSeqTemp.get(k);
 			ungrouped.add(card);
 			ungrouped = sortByFace(ungrouped);
 			//
@@ -1263,7 +1263,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	}
 		
 	
-	private boolean chechForPure(List<Card> cards)
+	private boolean chechForPure(List<BotCard> cards)
 	{
 		boolean flag= false;
 		cardListObj = new CardList();
@@ -1277,7 +1277,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return flag;
 	}
 	
-	private boolean checkForSequence(List<Card> cards)
+	private boolean checkForSequence(List<BotCard> cards)
 	{
 		boolean flag= false;
 		cardListObj = new CardList();
@@ -1291,7 +1291,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return flag;
 	}
 	
-	private boolean checkForSet(List<Card> cards)
+	private boolean checkForSet(List<BotCard> cards)
 	{
 		boolean flag= false;
 		cardListObj = new CardList();
@@ -1352,12 +1352,12 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return flag;
 	}
 	
-	private List<Card> sortByFace(List<Card> cards)
+	private List<BotCard> sortByFace(List<BotCard> cards)
 	{
 		//Sorts them by Face.
-		List<Card> sortedCards=new ArrayList<Card>();
+		List<BotCard> sortedCards=new ArrayList<BotCard>();
 		
-		for(Card c :cards)
+		for(BotCard c :cards)
 		{
 			if(sortedCards.size() == 0)
 			{
@@ -1367,7 +1367,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 			{
 				for(int i=0;i<sortedCards.size(); i++)
 				{
-					Card cardObj=sortedCards.get(i);
+					BotCard cardObj=sortedCards.get(i);
 					if(cardObj.getFace().getValue() >= c.getFace().getValue())
 					{
 						sortedCards.add(i,c);
@@ -1393,18 +1393,18 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return cards;
 	}
 	
-	public void setJokerCard(Card jokerCard) {
+	public void setJokerCard(BotCard jokerCard) {
 		this.cutJoker = jokerCard;
 	}
 	
-	public Card getJokerCard() {
+	public BotCard getJokerCard() {
 		
 		return cutJoker;
 	}
 	
 	
 	private boolean duplicateCard(CardList cL, boolean isPure) {
-		//System.out.println("In Duplicate Card "+cL.list.toString()+" ");
+		//System.out.println("In Duplicate BotCard "+cL.list.toString()+" ");
 		
 		for (int i = 0; i < cL.length; i++) {
 			for (int j = 0; j < cL.length; j++) {
@@ -1514,16 +1514,16 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		}
 	}
 	
-	private boolean checkForPureImpure(List<Card> cards, boolean checkForPure)
+	private boolean checkForPureImpure(List<BotCard> cards, boolean checkForPure)
 	{
 		boolean flag = false;
 		int tempFaceValue = -1;
 		boolean firstFace = true;
 		boolean isPure = true;
-		List<Card> cardsTemp = sortByFace(cards);
+		List<BotCard> cardsTemp = sortByFace(cards);
 		if(checkForPure)
 		{
-			faceLoop :for(Card crd :  cardsTemp)
+			faceLoop :for(BotCard crd :  cardsTemp)
 			{
 				if(firstFace)
 				{
@@ -1555,7 +1555,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 				int jokerCardCount =0;
 				for(int z=0 ; z<cardsTemp.size() ; z++)
 				{
-					Card checkNonJoker = cardsTemp.get(z);
+					BotCard checkNonJoker = cardsTemp.get(z);
 					if(!isJoker(checkNonJoker))
 					{
 						++nonJokerCardCount;
@@ -1567,7 +1567,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 				}
 				if(nonJokerCardCount<=2 && jokerCardCount<=1)
 				{
-					faceLoop :for(Card crd :   cardsTemp)
+					faceLoop :for(BotCard crd :   cardsTemp)
 					{
 						if(firstFace)
 						{   
@@ -1629,12 +1629,12 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return flag;
 	}
 	
-	private boolean hasSameSuit(List<Card> cards)
+	private boolean hasSameSuit(List<BotCard> cards)
 	{
 		boolean first = true;
 		boolean isAllSuitSame = true;
 		int suitValue = -1;
-		suitloop : for(Card c :cards)
+		suitloop : for(BotCard c :cards)
 		{
 			if(first)
 			{
@@ -1659,7 +1659,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	}
 	
 	
-	private boolean isPureSequesnce(List<Card> cards)
+	private boolean isPureSequesnce(List<BotCard> cards)
 	{
 		
 		boolean isPure = false;
@@ -1685,7 +1685,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return flag;
 	}
 	
-	private boolean isJoker(Card c) {
+	private boolean isJoker(BotCard c) {
 		//returns true if the card is a joker or cutjoker.
 		if (getJokerCard() == null) return false;
 		if (c.getFace().getValue() == getJokerCard().getFace().getValue())
@@ -1696,19 +1696,19 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		return false;
 	}
 	
-	private boolean isPaperJoker(Card c) {
+	private boolean isPaperJoker(BotCard c) {
 		//returns true if the card is a joker or cutjoker.
 		if (c.getFace().getValue() == 21) return true;
 		return false;
 	}
 	
-	private boolean isValidSet(List<Card> cards)
+	private boolean isValidSet(List<BotCard> cards)
 	{
 		boolean flag=true;	
 		 
 		for(int i=0;i<cards.size();i++)
 		{
-			Card compCard=cards.get(i);
+			BotCard compCard=cards.get(i);
 			if(! isJoker(compCard))
 			{
 				for(int j=0;j<cards.size();j++)
@@ -1716,7 +1716,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 					if(i != j)
 					{
 						
-						Card card=cards.get(j);
+						BotCard card=cards.get(j);
 						if(!isJoker(card))
 						{
 							if(compCard.getSuit().getValue() == card.getSuit().getValue())
@@ -1764,14 +1764,14 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	public static void main(String... crd)
 	{
 		RummyBotIntelligence rc = new RummyBotIntelligence(null);
-		List<Card> list=new ArrayList<Card>();
+		List<BotCard> list=new ArrayList<BotCard>();
 		
 		Face f4=new Face();
 		Suit s4=new Suit();
 		f4.setValue(2);
 		s4.setValue(1);
 		
-		Card c4=new Card();
+		BotCard c4=new BotCard();
 		c4.setFace(f4);
 		c4.setSuit(s4);
 		list.add(c4);
@@ -1781,7 +1781,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f5.setValue(4);
 		s5.setValue(1);
 		
-		Card c5=new Card();
+		BotCard c5=new BotCard();
 		c5.setFace(f5);
 		c5.setSuit(s5);
 		list.add(c5);
@@ -1791,7 +1791,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f6.setValue(8);
 		s6.setValue(2);
 		
-		Card c6=new Card();
+		BotCard c6=new BotCard();
 		c6.setFace(f6);
 		c6.setSuit(s6);
 		list.add(c6);
@@ -1801,7 +1801,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f7.setValue(6);
 		s7.setValue(2);
 		
-		Card c7=new Card();
+		BotCard c7=new BotCard();
 		c7.setFace(f7);
 		c7.setSuit(s7);
 		list.add(c7);
@@ -1811,7 +1811,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f1.setValue(4);
 		s1.setValue(0);
 		
-		Card c1=new Card();
+		BotCard c1=new BotCard();
 		c1.setFace(f1);
 		c1.setSuit(s1);
 		list.add(c1);
@@ -1821,7 +1821,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f2.setValue(10);
 		s2.setValue(0);
 		
-		Card c2=new Card();
+		BotCard c2=new BotCard();
 		c2.setFace(f2);
 		c2.setSuit(s2);
 		list.add(c2);
@@ -1833,7 +1833,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f3.setValue(3);
 		s3.setValue(0);
 		
-		Card c3=new Card();
+		BotCard c3=new BotCard();
 		c3.setFace(f3);
 		c3.setSuit(s3);
 		list.add(c3);
@@ -1844,7 +1844,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f8.setValue(2);
 		s8.setValue(0);
 		
-		Card c8=new Card();
+		BotCard c8=new BotCard();
 		c8.setFace(f8);
 		c8.setSuit(s8);
 		list.add(c8);
@@ -1855,7 +1855,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f9.setValue(5);
 		s9.setValue(0);
 		
-		Card c9=new Card();
+		BotCard c9=new BotCard();
 		c9.setFace(f9);
 		c9.setSuit(s9);
 		list.add(c9);
@@ -1866,22 +1866,22 @@ public class RummyBotIntelligence extends RummyBotLogic {
 		f10.setValue(2);
 		s10.setValue(1);
 		
-		Card c10=new Card();
+		BotCard c10=new BotCard();
 		c10.setFace(f10);
 		c10.setSuit(s10);
 		list.add(c10);
 		
-//		List<List<Card>> sortedByFace = rc.groupByFace(list);
+//		List<List<BotCard>> sortedByFace = rc.groupByFace(list);
 //		for(int i=0 ; i<sortedByFace.size(); i++)
 //		{
-//			List<Card> faceList = sortedByFace.get(i);
+//			List<BotCard> faceList = sortedByFace.get(i);
 //			for(int j=0 ; j<faceList.size(); j++)
 //			{
 //				System.out.println(faceList.get(j).face.value +" ## "+faceList.get(j).suit.value);
 //			}
 //		}
 		
-		rc.onHandCards(list);
+		rc.onnHandCards(list);
 		rc.seperateReadyChunks();
 		rc.groupByFace(list);
 //		//rc.display();
@@ -1906,7 +1906,7 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	}
 	
 	class CardList {
-		public List<Card> list = new ArrayList<Card>();
+		public List<BotCard> list = new ArrayList<BotCard>();
 		public int length = 0;
 		public int jkrCount = 0;
 		public int paperJkrCount = 0;

@@ -370,7 +370,7 @@ public class ChildRummyBot extends RummyBot {
 //			{
 				if(action == 21) //user picked from discard pile
 				{
-					rummyAI.saveOpponentPlayersPickedCards(playerid,card,false);
+					rummyAI.saveOpponentPlayersPickedCards(playerid,(BotCard)card,false);
 				}
 //				myNextPlayerturn = false;
 //			}

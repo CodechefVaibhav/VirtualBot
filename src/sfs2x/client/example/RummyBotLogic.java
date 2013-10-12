@@ -30,7 +30,7 @@ public class RummyBotLogic
 {
 	private List<Card> cardlist = null;
 	private Card cutJoker = null;	
-	private Card discardedCard=null;
+	protected Card discardedCard=null;
 	private List<Card> cardsToBeMeld=null;
 	private int points=0;
 	private List<List<Card>> groupedCards=new ArrayList<List<Card>>();
