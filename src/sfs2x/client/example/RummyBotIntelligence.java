@@ -12,6 +12,8 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.naming.ldap.SortResponseControl;
+
 import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 
@@ -444,6 +446,206 @@ public class RummyBotIntelligence extends RummyBotLogic {
 	
 	private void checkToDeclare()
 	{
+		
+	}
+	
+	private void calculateProbability(int sum)
+	{
+		double prob = (double)sum/9;
+		System.out.println(prob);
+	}
+	
+	private List<BotCard> testOpponentPickedCard()
+	{
+		List<BotCard> testCards = new ArrayList<BotCard>();
+		Face f4=new Face();
+		Suit s4=new Suit();
+		f4.setValue(1);
+		s4.setValue(0);
+		
+		BotCard c4=new BotCard();
+		c4.setFace(f4);
+		c4.setSuit(s4);
+		testCards.add(c4);
+		
+		Face f5=new Face();
+		Suit s5=new Suit();
+		f5.setValue(2);
+		s5.setValue(0);
+		
+		BotCard c5=new BotCard();
+		c5.setFace(f5);
+		c5.setSuit(s5);
+		testCards.add(c5);
+		
+		Face f6=new Face();
+		Suit s6=new Suit();
+		f6.setValue(3);
+		s6.setValue(0);
+		
+		BotCard c6=new BotCard();
+		c6.setFace(f6);
+		c6.setSuit(s6);
+		testCards.add(c6);
+		
+		return testCards;	
+	}
+	
+	private List<BotCard> testDiscardPile()
+	{
+		List<BotCard> testCards = new ArrayList<BotCard>();
+		Face f4=new Face();
+		Suit s4=new Suit();
+		f4.setValue(6);
+		s4.setValue(1);
+		
+		BotCard c4=new BotCard();
+		c4.setFace(f4);
+		c4.setSuit(s4);
+		testCards.add(c4);
+		
+		Face f5=new Face();
+		Suit s5=new Suit();
+		f5.setValue(8);
+		s5.setValue(0);
+		
+		BotCard c5=new BotCard();
+		c5.setFace(f5);
+		c5.setSuit(s5);
+		testCards.add(c5);
+		
+		Face f6=new Face();
+		Suit s6=new Suit();
+		f6.setValue(9);
+		s6.setValue(1);
+		
+		BotCard c6=new BotCard();
+		c6.setFace(f6);
+		c6.setSuit(s6);
+		testCards.add(c6);
+		
+		return testCards;
+	}
+	private void testCards()
+	{
+		List<BotCard> testCards = new ArrayList<BotCard>();
+		Face f4=new Face();
+		Suit s4=new Suit();
+		f4.setValue(2);
+		s4.setValue(1);
+		
+		BotCard c4=new BotCard();
+		c4.setFace(f4);
+		c4.setSuit(s4);
+		testCards.add(c4);
+		
+		Face f5=new Face();
+		Suit s5=new Suit();
+		f5.setValue(4);
+		s5.setValue(1);
+		
+		BotCard c5=new BotCard();
+		c5.setFace(f5);
+		c5.setSuit(s5);
+		testCards.add(c5);
+		
+		Face f6=new Face();
+		Suit s6=new Suit();
+		f6.setValue(5);
+		s6.setValue(1);
+		
+		BotCard c6=new BotCard();
+		c6.setFace(f6);
+		c6.setSuit(s6);
+		testCards.add(c6);
+		
+		prepareChunkProbability(testCards);
+	}
+	private void prepareChunkProbability(List<BotCard> testCards)
+	{
+//		for(int i=0 ; i<chunkList.size(); i++)
+//		{
+			boolean firstFlag = true;
+			int tempNum =0 ;
+			int suitValue = -1;
+			List<Integer> myTempCardFace = new ArrayList<Integer>();
+//			Chunk myChunkTemp = chunkList.get(i);
+//			List<BotCard> myBotCards = myChunkTemp.getChunkCards();
+			List<BotCard> myBotCards = testCards;
+			myBotCards = sortByFace(myBotCards);
+			int size = myBotCards.size();
+			++size;
+			for(int j=0; j<size; j++)
+			{
+				if(firstFlag)
+				{
+					suitValue = myBotCards.get(j).getSuit().value;
+					System.out.println("Suit : "+suitValue);
+					BotCard tempCard = myBotCards.get(j);
+					tempNum = tempCard.face.value;
+					++tempNum;
+					firstFlag = false;
+				}
+				if(j == (size-1))
+				{
+					BotCard tempCard = myBotCards.get(j-1);
+					tempNum = tempCard.face.value;
+					++tempNum;
+					myTempCardFace.add(tempNum);
+				}
+				else
+				{
+					BotCard tempCard = myBotCards.get(j);
+					if(tempCard.face.value == tempNum)
+					{
+						tempNum = tempCard.face.value;
+						++tempNum;
+					}
+					else
+					{
+						if(!myTempCardFace.contains(tempNum))
+							myTempCardFace.add(tempNum);
+					}
+				}
+			}
+			
+		//}
+		
+			
+		List<Integer> storeSum = new ArrayList<Integer>();
+		
+		for(int k=0; k<myTempCardFace.size(); k++)
+		{
+			System.out.println(myTempCardFace.get(k));
+			
+			List<BotCard> pickedCard = testOpponentPickedCard();
+			int count =0;
+			for(int y=0 ; y<pickedCard.size(); y++)
+			{
+				BotCard card = pickedCard.get(y);
+				if(card.face.value == myTempCardFace.get(k) && card.suit.value == suitValue)
+				{
+					++count;
+				}
+			}
+			
+			List<BotCard> dicardedCard = testDiscardPile();
+			for(int y=0 ; y<dicardedCard.size(); y++)
+			{
+				BotCard card = dicardedCard.get(y);
+				if(card.face.value == myTempCardFace.get(k)&& card.suit.value == suitValue)
+				{
+					++count;
+				}
+			}
+			
+			System.out.println("sum" + count +" %%%%% "+ myTempCardFace.get(k));
+			calculateProbability(count);
+			storeSum.add(count);
+			
+		}
+		
+		
 		
 	}
 	
@@ -1894,9 +2096,10 @@ public class RummyBotIntelligence extends RummyBotLogic {
 //			}
 //		}
 		
-		rc.onnHandCards(list);
-		rc.seperateReadyChunks();
-		rc.groupByFace(list);
+		rc.testCards();
+//		rc.onnHandCards(list);
+//		rc.seperateReadyChunks();
+//		rc.groupByFace(list);
 //		//rc.display();
 //		list=rc.sortByFace(list);
 //		if(rc.isPureSequesnce(list))
